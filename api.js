@@ -18,48 +18,114 @@ await page.setViewport({
   });
 
 
-await page.goto(URL, { waitUntil:"networkidle0"});
+await page.goto(URL, { waitUntil: ["domcontentloaded", "networkidle0"]});
 await page.waitFor('#root');
 await page.click('input[name="postalCode"]');
 await page.type('input[name="postalCode"]','08015', {delay: 50});
 await page.click('button[class="button button-primary button-big"]');
-await page.waitForNavigation()
+await page.waitForNavigation({
+    waitUntil: ['load','networkidle0'],
+  });
+
+
 
 // Store all products
 let el = [];
 
-// Get all sections 
-const sections = await page.$$('div[class="category-detail__content"] > section');
+// Click category menu
+const categories = await page.$$('ul[class="category-menu"] > li');
 
-for(let section of sections){
-    let title = await section.$eval(('section[class="section"] > h3'), node => node.innerText);
-    let products = await section.$$(('div[class="product-container"] > div '));
-    let obj = {
-        "title": title,
-        "product": {
-            "name": [],
-            "quantity":{
-                "name": [],
-                "lot": []
-            }
+for  await (let category of categories){
+
+        await category.click('li[class="category-menu__item"]', {delay: 100});
+    
+    
+
+
+    
+    // Get category name
+    let categoryName = await category.$eval(('span[class="category-menu__header category-menu__header"] > label'), node => node.innerText);
+
+    let categoryObj = {
+        "name": categoryName,
+        "subcategory": {
+                "products":[],
+
+            
+
         },
-
     }
-    for(let product of products){
-        let name = await product.$eval(('div[class="product-cell__info"] > h4'), node => node.innerText);
-        let quantityName = await product.$eval(('span[class="footnote1-r"].childNodes[1]'), node=> node.innerText);
-        let lot = await product.$eval(('div[class="product-format product-format__size--cell"].childNodes')[1], node => node.innerText);
 
-        obj.product.name.push(name);
-        obj.product.quantity.name.push(quantityName);
-        obj.product.quantity.lot.push(lot);
 
+
+    // Click sub category menu
+    let subCategories = await category.$$(' ul > li');
+      for await (let subCategory of subCategories){
+
+        await subCategory.click('li[class="category-item"]');
+
+        let subCategoryName =  await subCategory.$eval(('li[class="category-item category-item--selected subhead1-r"] > a'), node => node.innerText);
+        
+
+ // Get all sections of products
+ const sections =  await page.$$('div[class="category-detail__content"] > section');
+        
+    sections.forEach(async (section)=>{
+        let title = await section.$eval(('section[class="section"] > h3'), node => node.innerText);
+
+        
+   
+     
+
+  
+     let products =  await section.$$(('div[class="product-container"] > div '));
+        products.forEach(async (product) => {
+             let name = await product.$eval(('div[class="product-cell__info"] > h4'),  node =>  node.innerText);
+             let quantity = await product.$eval(('div[class="product-format product-format__size--cell"] > span[class="footnote1-r"]:first-child'), node=>  node.innerText);
+             let lot = await product.$eval(('div[class="product-format product-format__size--cell"] > span[class="footnote1-r"]:last-child'), node =>  node.innerText);
+             let price = await product.$eval(('div[class="product-price"] > p[class="product-price__unit-price subhead1-b"]'), node =>  node.innerText);
+             let ud = await product.$eval(('div[class="product-price"] > p[class="product-price__extra-price subhead1-r"]'), node =>  node.innerText);
+           
+
+             let produ = {
+                "nameSubCategory" :  subCategoryName,
+                "title":  title,
+                "subCategoryproduct": {
+                    "name": name,
+                    "quantity": quantity,
+                    "lot": lot,
+                    "price": price,
+                    "ud": ud
+                },
+                
+             };
+
+             categoryObj.subcategory.products.push(produ);
+        
+
+          });
+
+
+           
+
+     
+        })
+
+
+
+    
     }
-    el.push(obj);
+          
+
+  el.push(categoryObj);
+
 }
 
-console.log(el);
 
+
+
+
+console.log(el);
    
 
 debugger;
