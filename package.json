@@ -1,0 +1,26 @@
+{
+  "name": "scraping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wojtec/scraping-js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Wojtec/scraping-js/issues"
+  },
+  "homepage": "https://github.com/Wojtec/scraping-js#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "jquery": "^3.5.1",
+    "puppeteer": "^3.2.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
+}
