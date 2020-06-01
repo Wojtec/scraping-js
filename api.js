@@ -48,12 +48,7 @@ for  await (let category of categories){
 
     let categoryObj = {
         "name": categoryName,
-        "subcategory": {
-                "products":[],
-
-            
-
-        },
+        "subcategory": [],
     }
 
 
@@ -65,7 +60,11 @@ for  await (let category of categories){
         await subCategory.click('li[class="category-item"]');
 
         let subCategoryName =  await subCategory.$eval(('li[class="category-item category-item--selected subhead1-r"] > a'), node => node.innerText);
-        
+        let items = {
+            "nameSubCategory" :  subCategoryName,
+            "title":  null,
+            "pro":[],
+        }
 
  // Get all sections of products
  const sections =  await page.$$('div[class="category-detail__content"] > section');
@@ -73,11 +72,9 @@ for  await (let category of categories){
     sections.forEach(async (section)=>{
         let title = await section.$eval(('section[class="section"] > h3'), node => node.innerText);
 
-        
-   
-     
+        items.title = title;
 
-  
+
      let products =  await section.$$(('div[class="product-container"] > div '));
         products.forEach(async (product) => {
              let name = await product.$eval(('div[class="product-cell__info"] > h4'),  node =>  node.innerText);
@@ -88,19 +85,14 @@ for  await (let category of categories){
            
 
              let produ = {
-                "nameSubCategory" :  subCategoryName,
-                "title":  title,
-                "subCategoryproduct": {
                     "name": name,
                     "quantity": quantity,
                     "lot": lot,
                     "price": price,
-                    "ud": ud
-                },
-                
-             };
+                    "ud": ud,
+              };
 
-             categoryObj.subcategory.products.push(produ);
+             items.pro.push(produ);
         
 
           });
@@ -108,10 +100,10 @@ for  await (let category of categories){
 
            
 
-     
+
         })
 
-
+        categoryObj.subcategory.push(items);
 
     
     }
