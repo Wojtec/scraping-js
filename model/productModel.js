@@ -8,6 +8,10 @@ let productSchema = mongoose.Schema({
         type: [mongoose.Schema.ObjectId],
         ref: 'productCategories',
     },
+    productImage: {
+        type: String,
+        required: true,
+    },
     productName: {
         type: String,
         required: true,
@@ -41,7 +45,7 @@ let productSchema = mongoose.Schema({
 })
 
 // Export product model
-let product = module.exports.model('product', productSchema);
+let product = module.exports = mongoose.model('product', productSchema);
 
 module.exports.get = (callback, limit) =>{
     product.find(callback).limit(limit);

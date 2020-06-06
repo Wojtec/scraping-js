@@ -7,8 +7,11 @@ let subCategoryMenu = mongoose.Schema({
         type: String,
         required: true,
     },
-
-    categories: {
+    productCategoriesId:{
+        type: [mongoose.Schema.ObjectId],
+        ref: 'productCategories',
+    },
+    categoryMenu: {
         type: [mongoose.Schema.ObjectId],
         ref: 'categoryMenu'
     },

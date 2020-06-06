@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "api.js",
   "scripts": {
-    "start": "api.js",
+    "start": "node api.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +18,11 @@
   "homepage": "https://github.com/Wojtec/scraping-js#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "cloudinary": "^1.21.0",
+    "dotenv": "^8.2.0",
     "jquery": "^3.5.1",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.7",
     "puppeteer": "^3.2.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5"

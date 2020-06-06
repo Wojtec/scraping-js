@@ -7,17 +7,14 @@ let productCategoriesSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-
+    productsId:{
+        type: [mongoose.Schema.ObjectId],
+        ref: 'Product',
+    },
     subCategoryMenuId: {
         type: [mongoose.Schema.ObjectId],
         ref: 'subCategoryMenu',
     },
-
-    products:{
-        type: [mongoose.Schema.ObjectId],
-        ref: 'Product',
-    },
-
     date:{
         type: Date,
         default: Date.now,
@@ -27,7 +24,7 @@ let productCategoriesSchema = mongoose.Schema({
 })
 
 //Export categories model
-let productCategories = module.exports.model('productCategories', productCategoriesSchema);
+let productCategories = module.exports = mongoose.model('productCategories', productCategoriesSchema);
 
 module.exports.get = (callback, limit) => {
     productCategories.find(callback).limit(limit);

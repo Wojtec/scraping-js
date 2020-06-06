@@ -9,7 +9,10 @@ let categoryMenuSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-
+    subCategoryMenuId: {
+        type: [mongoose.Schema.ObjectId],
+        ref: 'subCategoryMenu',
+    },
     date: {
         type: Date,
         default: Date.now,
